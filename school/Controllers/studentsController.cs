@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DotLiquid.Tags;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ namespace school.Controllers
 {
     public class studentsController : Controller
     {
+        
         private readonly SchoolContext _context;
 
         public studentsController(SchoolContext context)
@@ -45,6 +47,9 @@ namespace school.Controllers
         // GET: students/Create
         public IActionResult Create()
         {
+            var classroom = new Classroom();
+             
+            
             return View();
         }
 
@@ -53,11 +58,12 @@ namespace school.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Age,NumberStudent,Adress,Phone,Year")] student student)
+        public async Task<IActionResult> Create([Bind("Id,Name,Age,NumberStudent,Adress,Phone,Year,Classroom.Id,Classroom.Name")] student student,Classroom classroom)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(student);
+                _context.Add(classroom);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
